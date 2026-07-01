@@ -1,0 +1,21 @@
+# Backend
+backend/target/
+*.class
+*.jar
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.env.local
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# BD local (no subir credenciales)
+backend/src/main/resources/application-local.properties
