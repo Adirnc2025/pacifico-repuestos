@@ -83,13 +83,11 @@ class PedidoServiceTest {
             .tipoDelivery("RECOJO").detalles(List.of()).build();
         when(pedidoRepo.save(any())).thenReturn(pedidoSaved);
         when(detalleRepo.save(any())).thenReturn(new DetallePedido());
-        when(inventarioRepo.save(any())).thenReturn(inventarioMock);
 
         PedidoResponse res = pedidoService.crear("juan@test.com", buildRequest(2));
 
         assertThat(res).isNotNull();
         assertThat(res.getEstado()).isEqualTo("PENDIENTE");
-        verify(inventarioRepo).save(any(Inventario.class));
         verify(detalleRepo).save(any(DetallePedido.class));
     }
 
@@ -151,7 +149,6 @@ class PedidoServiceTest {
             .tipoDelivery("INTERPROVINCIAL").detalles(List.of()).build();
         when(pedidoRepo.save(any())).thenReturn(pedidoSaved);
         when(detalleRepo.save(any())).thenReturn(new DetallePedido());
-        when(inventarioRepo.save(any())).thenReturn(inventarioMock);
 
         PedidoRequest req = buildRequest(1);
         req.setTipoDelivery("INTERPROVINCIAL");

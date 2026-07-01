@@ -1,6 +1,7 @@
 package com.pacifico.repuestos.controller;
 
 import com.pacifico.repuestos.model.Cliente;
+import com.pacifico.repuestos.model.Usuario;
 import com.pacifico.repuestos.repository.ClienteRepository;
 import com.pacifico.repuestos.security.JwtUtil;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,11 @@ class ClienteControllerTest {
 
     @Test
     void listar_conClientes_devuelveListaNoVacia() throws Exception {
+        Usuario usuario = Usuario.builder()
+            .id(1L).nombre("Juan Pérez").correo("juan@test.com")
+            .rol(Usuario.Rol.CLIENTE).activo(true).build();
         Cliente cliente = new Cliente();
+        cliente.setUsuario(usuario);
         when(clienteRepo.findAll()).thenReturn(List.of(cliente));
 
         mockMvc.perform(get("/api/clientes"))
