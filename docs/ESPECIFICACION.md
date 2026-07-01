@@ -1,12 +1,14 @@
 # ESPECIFICACION.md — Fuente de Verdad
 # Pacífico Repuestos — Sistema Web de Gestión y Comercialización de Repuestos Automotrices
 
-**Versión:** 1.0  
-**Fecha:** 2025  
-**Metodología:** Scrum  
+**Versión:** 1.0.0  
+**Fecha:** Junio 2026  
+**Estado:** Completado  
+**Metodología:** Scrum — 4 sprints de 2 semanas  
 **Flujo de trabajo:** ADIPD (Análisis → Diseño → Implementación → Pruebas → Despliegue)  
-**Herramienta de apoyo:** IA (Claude — Anthropic)  
+**Herramienta de apoyo IA:** Claude (Anthropic) — SDD (Specification Driven Development) con Kiro  
 **Ubicación del negocio:** Ayacucho, Perú  
+**Repositorio:** https://github.com/Adirnc2025/pacifico-repuestos  
 
 > Este documento es la **fuente de verdad** del proyecto.  
 > Todo el código, pruebas y despliegue se generan a partir de esta especificación.  
@@ -40,6 +42,14 @@
 **Tipo:** Plataforma web de comercialización de repuestos automotrices  
 **Negocio:** Tienda de repuestos automotrices ubicada en Ayacucho, Perú  
 
+### Datos del negocio
+| Dato | Valor |
+|------|-------|
+| Local 1 | Jr. Protzel N° 114, Ayacucho |
+| Local 2 | Av. Mariscal Cáceres N° 258, Ayacucho |
+| WhatsApp | 981 869 554 |
+| Teléfono | 981 869 554 |
+
 ### Objetivo
 Desarrollar una plataforma web profesional, moderna y escalable que permita:
 - Venta de repuestos automotrices en línea.
@@ -70,16 +80,16 @@ Desarrollar una plataforma web profesional, moderna y escalable que permita:
 |------|-----------|---------|
 | Frontend | React + Vite | React 18 |
 | Estilos | Tailwind CSS | v3 |
-| Backend | Spring Boot (Java) | Java 17 / Spring Boot 3.x |
-| Base de datos | PostgreSQL | 15+ |
+| Backend | Spring Boot (Java) | Java 17 / Spring Boot 3.2 |
+| Base de datos | Microsoft SQL Server (local) | Puerto 1433, BD `pacifico_db` |
 | ORM | Spring Data JPA / Hibernate | — |
-| Seguridad | Spring Security + JWT | — |
-| Pruebas backend | JUnit 5 + Mockito + JaCoCo | — |
+| Seguridad | Spring Security + JWT + BCrypt | — |
+| Pruebas backend | JUnit 5 + Mockito + JaCoCo | JaCoCo 0.8.11 |
 | IDE | Visual Studio Code | — |
-| Control de versiones | GitHub | — |
-| Despliegue frontend | Vercel | — |
-| Despliegue backend | Render | — |
-| Base de datos producción | Railway PostgreSQL | — |
+| Control de versiones | GitHub | github.com/Adirnc2025/pacifico-repuestos |
+| Ejecución frontend | Local — Vite dev server | localhost:5173 |
+| Ejecución backend | Local — Spring Boot embebido | localhost:8080 |
+| Ejecución base de datos | Local — SQL Server | localhost:1433 |
 
 ---
 
@@ -153,8 +163,8 @@ Desarrollar una plataforma web profesional, moderna y escalable que permita:
 ### Módulo Contacto
 | ID | Descripción | Prioridad |
 |----|-------------|-----------|
-| RF36 | Botón de contacto directo por WhatsApp | Alta |
-| RF37 | Footer con contacto, ubicación y horarios | Alta |
+| RF36 | Botón de contacto directo por WhatsApp (981 869 554) | Alta |
+| RF37 | Footer con contacto, ubicación (Jr. Protzel N° 114 y Av. Mariscal Cáceres N° 258, Ayacucho) y horarios | Alta |
 
 ### Módulo Reportes
 | ID | Descripción | Prioridad |
@@ -174,17 +184,17 @@ Desarrollar una plataforma web profesional, moderna y escalable que permita:
 | RNF03 | Seguridad | Contraseñas cifradas con BCrypt | Sin texto plano en BD |
 | RNF04 | Seguridad | Autenticación con JWT | Token con expiración |
 | RNF05 | Seguridad | Endpoints admin protegidos por rol | Cliente no accede a /admin |
-| RNF06 | Seguridad | HTTPS en producción | SSL en Vercel y Render |
+| RNF06 | Seguridad | Conexión BD con SQL Server Authentication | Credenciales por variable de entorno, sin texto plano en código |
 | RNF07 | Usabilidad | Diseño responsive | Probado en 375px, 768px, 1280px |
 | RNF08 | Usabilidad | Catálogo visual con imágenes | Cada producto con al menos 1 imagen |
 | RNF09 | Usabilidad | Flujo de compra intuitivo | Sin capacitación previa |
-| RNF10 | Disponibilidad | Uptime 99% | Monitoreo en Render y Vercel |
-| RNF11 | Despliegue | Frontend en Vercel | URL pública accesible |
-| RNF12 | Despliegue | Backend en Render | API REST pública |
-| RNF13 | Despliegue | BD en Railway PostgreSQL | Conexión estable |
-| RNF14 | Calidad | Cobertura de pruebas ≥ 90% | Reporte JaCoCo |
+| RNF10 | Disponibilidad | Ejecución estable en entorno local | Backend y BD accesibles en localhost |
+| RNF11 | Despliegue | Frontend local | Vite dev server en localhost:5173 |
+| RNF12 | Despliegue | Backend local | Spring Boot embebido en localhost:8080 |
+| RNF13 | Despliegue | BD local SQL Server | Conexión estable en localhost:1433 |
+| RNF14 | Calidad | Cobertura de pruebas ≥ 90% | Reporte JaCoCo — alcanzado: 92.7% líneas |
 | RNF15 | Mantenibilidad | Arquitectura MVC por capas | Revisión en code review |
-| RNF16 | Versionado | Código en GitHub | Ramas main y develop |
+| RNF16 | Versionado | Código en GitHub | Rama main |
 
 ---
 
@@ -228,7 +238,7 @@ Desarrollar una plataforma web profesional, moderna y escalable que permita:
 | HU-18 | Como admin quiero configurar zonas y tarifas de delivery | 3 |
 | HU-19 | Como admin quiero ver un dashboard con métricas del negocio | 5 |
 | HU-20 | Como admin quiero generar reportes de ventas por período | 3 |
-| — | Despliegue Vercel + Render + Railway + pruebas finales | 7 |
+| — | Configuración SQL Server local + pruebas finales + cobertura JaCoCo | 7 |
 
 ---
 
@@ -237,15 +247,15 @@ Desarrollar una plataforma web profesional, moderna y escalable que permita:
 ### Stack tecnológico por capa
 ```
 [Navegador]
-    │  HTTP/HTTPS
+    │  HTTP
     ▼
-[React + Tailwind — Vercel]
+[React + Tailwind — localhost:5173 (Vite dev server)]
     │  REST API (JSON)
     ▼
-[Spring Boot — Render]
+[Spring Boot — localhost:8080]
     │  JPA/Hibernate
     ▼
-[PostgreSQL — Railway]
+[SQL Server — localhost:1433 (pacifico_db)]
 ```
 
 ### Estructura de paquetes — Backend
@@ -318,6 +328,19 @@ modelos (N) ──── (1) marcas
 pedidos (N) ──── (1) zonas_delivery
 ```
 
+### Datos de catálogo (seed real)
+**Total: 187 productos** (162 nuevos + 25 originales)
+
+| Categoría | Productos |
+|-----------|-----------|
+| Suspensión | 72 |
+| Reparación de Motor | 63 |
+| Dirección | 23 |
+| Lubricantes | 14 |
+| Sistema Eléctrico | 9 |
+| Frenos | 4 |
+| Accesorios | 2 |
+
 ### Scripts SQL
 - `database/01_ddl_create.sql` — Creación de tablas, índices y triggers
 - `database/02_seed_data.sql` — Datos semilla (marcas, modelos, motores, productos)
@@ -326,7 +349,7 @@ pedidos (N) ──── (1) zonas_delivery
 
 ## 9. Diseño de API REST
 
-**Base URL:** `https://pacifico-api.onrender.com/api`  
+**Base URL:** `http://localhost:8080/api`  
 **Formato:** JSON  
 **Autenticación:** `Authorization: Bearer <JWT>`
 
@@ -446,12 +469,7 @@ pacifico-repuestos/
 ### Ramas Git
 | Rama | Uso |
 |------|-----|
-| `main` | Producción — código estable y desplegado |
-| `develop` | Integración — código en desarrollo |
-| `feature/sprint-1` | Desarrollo Sprint 1 |
-| `feature/sprint-2` | Desarrollo Sprint 2 |
-| `feature/sprint-3` | Desarrollo Sprint 3 |
-| `feature/sprint-4` | Desarrollo Sprint 4 |
+| `main` | Única rama utilizada — código estable, todos los commits del proyecto |
 
 ---
 
@@ -497,44 +515,58 @@ pacifico-repuestos/
 
 ## 12. Despliegue
 
-### Frontend — Vercel
+> El proyecto se ejecuta de forma **local** (sin despliegue en la nube). Vercel/Render/Railway
+> quedan fuera de alcance de la v1.0; ver [Restricciones y Decisiones Técnicas](#15-restricciones-y-decisiones-técnicas).
+
+### Frontend — Local (Vite dev server)
 ```
-Comando build:  npm run build
-Directorio:     dist/
-Variable:       VITE_API_URL=https://pacifico-api.onrender.com/api
+Comando dev:    npm run dev
+URL:            http://localhost:5173
+Variable:       VITE_API_URL=http://localhost:8080/api
 ```
 
-### Backend — Render
+### Backend — Local (Spring Boot embebido)
 ```
-Tipo:           Web Service
 Runtime:        Java 17
-Comando build:  mvn clean package -DskipTests
-Comando start:  java -jar target/pacifico-repuestos.jar
+Comando build:  mvn clean package
+Comando run:    mvn spring-boot:run
+URL:            http://localhost:8080
 Variables:
-  DATABASE_URL=jdbc:postgresql://<railway-host>:5432/pacifico_db
-  DATABASE_USERNAME=postgres
+  DATABASE_URL=jdbc:sqlserver://localhost:1433;databaseName=pacifico_db;encrypt=true;trustServerCertificate=true
+  DATABASE_USERNAME=sa
   DATABASE_PASSWORD=****
   JWT_SECRET=<clave-256-bits>
   JWT_EXPIRATION=86400000
-  FRONTEND_URL=https://pacifico-repuestos.vercel.app
 ```
 
-### Base de Datos — Railway
+### Base de Datos — SQL Server local
 ```
-Motor:    PostgreSQL 15
-Scripts:  Ejecutar 01_ddl_create.sql → 02_seed_data.sql
+Motor:      Microsoft SQL Server
+Host:       localhost
+Puerto:     1433
+BD:         pacifico_db
+Auth:       SQL Server Authentication (usuario sa)
+Scripts:    Ejecutar 01_ddl_create.sql → 02_seed_data.sql
 ```
 
 ---
 
 ## 13. Pruebas
 
+### Resultado actual
+| Métrica | Resultado |
+|---------|-----------|
+| Pruebas unitarias JUnit 5 | 125 — todas pasan (0 fallos) |
+| Herramienta de cobertura | JaCoCo 0.8.11 |
+| Cobertura de líneas | **92.7%** (509/549) — supera el mínimo de 90% |
+| Gate `jacoco:check` | Cumplido (`mvn verify` → BUILD SUCCESS) |
+
 ### Estrategia de pruebas
 | Tipo | Herramienta | Cobertura mínima | Ubicación |
 |------|-------------|-----------------|-----------|
-| Unitarias | JUnit 5 + Mockito | 90% | `src/test/java/.../service/` |
+| Unitarias | JUnit 5 + Mockito | 90% (LINE) | `src/test/java/.../service/` |
 | Integración | JUnit 5 + MockMvc | Flujos críticos | `src/test/java/.../controller/` |
-| Cobertura | JaCoCo | ≥ 90% global | Reporte en `/target/site/jacoco` |
+| Cobertura | JaCoCo | ≥ 90% líneas | Reporte en `/target/site/jacoco` |
 
 ### Services a probar (prioridad)
 1. `AuthService` — registro, login, validaciones
@@ -550,6 +582,16 @@ Scripts:  Ejecutar 01_ddl_create.sql → 02_seed_data.sql
   <groupId>org.jacoco</groupId>
   <artifactId>jacoco-maven-plugin</artifactId>
   <version>0.8.11</version>
+  <configuration>
+    <excludes>
+      <exclude>**/model/**</exclude>
+      <exclude>**/dto/**</exclude>
+      <exclude>**/exception/**</exclude>
+      <exclude>**/config/**</exclude>
+      <exclude>**/*Application*</exclude>
+      <exclude>**/security/SecurityConfig.class</exclude>
+    </excludes>
+  </configuration>
   <executions>
     <execution>
       <goals><goal>prepare-agent</goal></goals>
@@ -580,6 +622,9 @@ Scripts:  Ejecutar 01_ddl_create.sql → 02_seed_data.sql
 </plugin>
 ```
 
+> Los paquetes `model`, `dto`, `exception`, `config` y la clase `*Application*` se excluyen del
+> cálculo de cobertura por ser POJOs/DTOs generados con Lombok sin lógica de negocio propia.
+
 ---
 
 ## 14. Product Backlog y Sprints
@@ -608,13 +653,12 @@ Scripts:  Ejecutar 01_ddl_create.sql → 02_seed_data.sql
 | Java 17 + Spring Boot 3.x | LTS estable, ecosistema maduro, soporte JPA/Security integrado |
 | React 18 + Vite | Rendimiento en desarrollo, ecosistema amplio, ideal para SPA |
 | Tailwind CSS | Desarrollo rápido de UI, diseño consistente sin CSS personalizado |
-| PostgreSQL | BD relacional robusta, soporte JSON, ideal para datos complejos |
+| SQL Server (reemplaza a PostgreSQL) | BD relacional disponible en el entorno de desarrollo, integración nativa con el driver `mssql-jdbc` |
 | JWT stateless | Escala horizontalmente, sin necesidad de sesiones en servidor |
-| Railway para BD | Plan gratuito adecuado para desarrollo y demo, fácil configuración |
-| Render para backend | Plan gratuito con Spring Boot, deploy desde GitHub |
-| Vercel para frontend | Deploy automático desde GitHub, CDN global gratuito |
+| Ejecución local (sin Vercel/Render/Railway) | Simplifica el alcance para la entrega v1.0; evita costos y configuración de servicios cloud |
+| Exclusión de `model`/`dto`/`exception`/`config` en JaCoCo | Son clases de datos (POJOs con Lombok) sin lógica de negocio; se mide cobertura real sobre `service`/`controller`/`security` |
 | Sin pago en línea v1.0 | Reduce complejidad; el pago se coordina por WhatsApp/efectivo |
-| Sin IA operativa | El sistema usa IA solo como herramienta de desarrollo (flujo ADIPD) |
+| Sin IA operativa | El sistema usa IA solo como herramienta de desarrollo (flujo ADIPD + SDD con Kiro) |
 
 ---
 
