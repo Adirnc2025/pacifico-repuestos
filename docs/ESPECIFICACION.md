@@ -71,6 +71,13 @@ Desarrollar una plataforma web profesional, moderna y escalable que permita:
 - Pasarela de pago en línea (el pago se coordina externamente).
 - App móvil nativa.
 - Inteligencia artificial como funcionalidad operativa.
+- Recuperación de contraseña por correo electrónico.
+- Confirmación de registro por correo electrónico.
+- Notificaciones por correo electrónico (cambio de estado de pedidos u otros eventos).
+- Edición y eliminación de modelos, generaciones y motores desde el panel admin (actualmente solo se crean; queda para v2).
+- Gestión de imágenes de productos desde la interfaz web (el backend existe, la UI queda para v2).
+- Gestión de compatibilidades producto-motor desde la interfaz web (el backend existe, la UI queda para v2).
+- Gestión de zonas y tarifas de delivery desde el panel admin (actualmente se configuran por script SQL; queda para v2).
 
 ---
 
@@ -112,8 +119,8 @@ Desarrollar una plataforma web profesional, moderna y escalable que permita:
 | RF02 | Inicio de sesión con correo y contraseña (JWT) | Alta |
 | RF03 | Inicio de sesión del administrador con rol ADMIN | Alta |
 | RF04 | Cierre de sesión desde cualquier página | Alta |
-| RF05 | Confirmación de registro por correo | Media |
-| RF06 | Recuperación de contraseña por enlace al correo (expira 30 min) | Media |
+| ~~RF05~~ | ~~Confirmación de registro por correo~~ | ~~Media~~ — **Fuera de alcance v1.0** (sin envío de correos) |
+| ~~RF06~~ | ~~Recuperación de contraseña por enlace al correo (expira 30 min)~~ | ~~Media~~ — **Fuera de alcance v1.0** (sin envío de correos) |
 
 ### Módulo Catálogo Automotriz
 | ID | Descripción | Prioridad |
@@ -123,9 +130,9 @@ Desarrollar una plataforma web profesional, moderna y escalable que permita:
 | RF09 | Mostrar generaciones por modelo | Alta |
 | RF10 | Mostrar motores por generación | Alta |
 | RF11 | CRUD de marcas (admin) | Alta |
-| RF12 | CRUD de modelos (admin) | Alta |
-| RF13 | CRUD de generaciones (admin) | Alta |
-| RF14 | CRUD de motores (admin) | Alta |
+| RF12 | CRUD de modelos (admin) — creación implementada; edición/eliminación queda para v2 | Media - v2 |
+| RF13 | CRUD de generaciones (admin) — creación implementada; edición/eliminación queda para v2 | Media - v2 |
+| RF14 | CRUD de motores (admin) — creación implementada; edición/eliminación queda para v2 | Media - v2 |
 
 ### Módulo Productos
 | ID | Descripción | Prioridad |
@@ -136,8 +143,8 @@ Desarrollar una plataforma web profesional, moderna y escalable que permita:
 | RF18 | Búsqueda por nombre o código (mínimo 3 caracteres, con sugerencias) | Alta |
 | RF19 | Productos destacados en página principal | Media |
 | RF20 | CRUD de productos (admin) | Alta |
-| RF21 | Gestión de compatibilidades producto-motor (admin) | Alta |
-| RF22 | Subida y gestión de imágenes de productos (admin) | Alta |
+| RF21 | Gestión de compatibilidades producto-motor (admin) — backend implementado; UI web queda para v2 | Media - v2 |
+| RF22 | Subida y gestión de imágenes de productos (admin) — backend implementado; UI web queda para v2 | Media - v2 |
 | RF23 | Gestión de stock por producto (admin) | Alta |
 | RF24 | CRUD de categorías (admin) | Alta |
 
@@ -148,7 +155,7 @@ Desarrollar una plataforma web profesional, moderna y escalable que permita:
 | RF26 | Modificar cantidades y eliminar del carrito | Alta |
 | RF27 | Realizar pedido con dirección y tipo de delivery | Alta |
 | RF28 | Consultar estado e historial de pedidos | Alta |
-| RF29 | Notificación de cambio de estado del pedido | Media |
+| ~~RF29~~ | ~~Notificación de cambio de estado del pedido~~ | ~~Media~~ — **Fuera de alcance v1.0** (sin envío de correos) |
 | RF30 | Gestión y cambio de estado de pedidos (admin) | Alta |
 | RF31 | Registro completo del detalle de pedidos | Alta |
 
@@ -157,7 +164,7 @@ Desarrollar una plataforma web profesional, moderna y escalable que permita:
 |----|-------------|-----------|
 | RF32 | Delivery local (Ayacucho) e interprovincial | Alta |
 | RF33 | Ingreso de dirección de entrega al pedir | Alta |
-| RF34 | Gestión de zonas y tarifas de delivery (admin) | Media |
+| RF34 | Gestión de zonas y tarifas de delivery (admin) — configuradas por script SQL; panel admin queda para v2 | Media - v2 |
 | RF35 | Mostrar costo de delivery según zona | Media |
 
 ### Módulo Contacto
@@ -231,10 +238,10 @@ Desarrollar una plataforma web profesional, moderna y escalable que permita:
 | HU-12 | Como cliente quiero consultar el estado de mis pedidos | 3 |
 | HU-17 | Como admin quiero gestionar y actualizar el estado de pedidos | 5 |
 
-### Sprint 4 — Cierre (Semanas 7-8) — 21 puntos
+### Sprint 4 — Cierre (Semanas 7-8) — 18 puntos
 | ID | Historia | Puntos |
 |----|----------|--------|
-| HU-04 | Como cliente quiero recuperar mi contraseña si la olvido | 3 |
+| ~~HU-04~~ | ~~Como cliente quiero recuperar mi contraseña si la olvido~~ | ~~3~~ — **Fuera de alcance v1.0** |
 | HU-18 | Como admin quiero configurar zonas y tarifas de delivery | 3 |
 | HU-19 | Como admin quiero ver un dashboard con métricas del negocio | 5 |
 | HU-20 | Como admin quiero generar reportes de ventas por período | 3 |
@@ -360,8 +367,7 @@ pedidos (N) ──── (1) zonas_delivery
 |--------|------|------|-------------|
 | POST | /register | No | Registrar cliente |
 | POST | /login | No | Iniciar sesión |
-| POST | /recuperar | No | Solicitar recuperación |
-| POST | /reset | No | Restablecer contraseña |
+| GET | /health | No | Healthcheck del servicio de autenticación |
 
 #### Productos — `/api/productos`
 | Método | Ruta | Auth | Descripción |
@@ -369,11 +375,22 @@ pedidos (N) ──── (1) zonas_delivery
 | GET | / | No | Listar con filtros opcionales |
 | GET | /{id} | No | Ver detalle |
 | GET | /buscar?q= | No | Buscar por nombre/código |
+| GET | /destacados | No | Listar productos destacados |
 | POST | / | ADMIN | Crear producto |
 | PUT | /{id} | ADMIN | Editar producto |
 | DELETE | /{id} | ADMIN | Eliminar producto |
 | POST | /{id}/imagenes | ADMIN | Subir imagen |
-| DELETE | /{id}/imagenes/{imgId} | ADMIN | Eliminar imagen |
+| DELETE | /imagenes/{imagenId} | ADMIN | Eliminar imagen |
+| POST | /{id}/compatibilidades | ADMIN | Agregar compatibilidad producto-motor |
+| DELETE | /{id}/compatibilidades | ADMIN | Eliminar compatibilidad producto-motor |
+
+#### Categorías — `/api/categorias`
+| Método | Ruta | Auth | Descripción |
+|--------|------|------|-------------|
+| GET | /api/categorias | No | Listar categorías |
+| POST | /api/categorias | ADMIN | Crear categoría |
+| PUT | /api/categorias/{id} | ADMIN | Editar categoría |
+| DELETE | /api/categorias/{id} | ADMIN | Eliminar categoría |
 
 #### Catálogo — `/api/marcas`, `/api/modelos`, `/api/generaciones`, `/api/motores`
 | Método | Ruta | Auth | Descripción |
@@ -385,6 +402,17 @@ pedidos (N) ──── (1) zonas_delivery
 | GET | /api/modelos?marcaId= | No | Modelos por marca |
 | GET | /api/generaciones?modeloId= | No | Generaciones por modelo |
 | GET | /api/motores?generacionId= | No | Motores por generación |
+
+#### Clientes — `/api/clientes`
+| Método | Ruta | Auth | Descripción |
+|--------|------|------|-------------|
+| GET | /api/clientes | ADMIN | Listar clientes registrados |
+
+#### Delivery — `/api/delivery`
+| Método | Ruta | Auth | Descripción |
+|--------|------|------|-------------|
+| GET | /api/delivery/zonas | No | Listar zonas de delivery con tarifas |
+| GET | /api/delivery/zonas/{tipo} | No | Obtener zona por tipo (LOCAL / INTERPROVINCIAL) |
 
 #### Pedidos — `/api/pedidos`
 | Método | Ruta | Auth | Descripción |
@@ -481,7 +509,7 @@ pacifico-repuestos/
 2. AuthService valida credenciales con BCrypt
 3. JwtUtil genera token JWT con: userId, correo, rol, expiración
 4. Backend devuelve: { token, tipo: "Bearer", rol }
-5. Frontend almacena el token en memoria (Context)
+5. Frontend almacena el token en localStorage y lo gestiona mediante AuthContext
 6. Cada petición protegida incluye: Authorization: Bearer <token>
 7. JwtFilter valida el token antes de procesar la petición
 ```
@@ -570,11 +598,10 @@ Scripts:    Ejecutar 01_ddl_create.sql → 02_seed_data.sql
 
 ### Services a probar (prioridad)
 1. `AuthService` — registro, login, validaciones
-2. `ProductoService` — CRUD, búsqueda, filtros
+2. `ProductoService` — CRUD, búsqueda, filtros, stock e inventario (la lógica de inventario está integrada dentro de ProductoService, no en un servicio separado)
 3. `PedidoService` — creación, estado, stock
 4. `CatalogoService` — marcas, modelos, generaciones, motores
-5. `InventarioService` — stock, alertas
-6. `ReporteService` — métricas, dashboard
+5. `ReporteService` — métricas, dashboard
 
 ### Configuración JaCoCo (pom.xml)
 ```xml
@@ -634,8 +661,8 @@ Scripts:    Ejecutar 01_ddl_create.sql → 02_seed_data.sql
 | Sprint 1 | Autenticación + estructura base | 1-2 | 17 |
 | Sprint 2 | Catálogo + búsqueda + admin productos | 3-4 | 30 |
 | Sprint 3 | Carrito + pedidos + admin pedidos | 5-6 | 19 |
-| Sprint 4 | Delivery + reportes + despliegue | 7-8 | 21 |
-| **Total** | | **8 semanas** | **87 pts** |
+| Sprint 4 | Delivery + reportes + despliegue | 7-8 | 18 |
+| **Total** | | **8 semanas** | **84 pts** |
 
 ### Definición de Terminado (DoD) global
 - Código implementado y funcional.
