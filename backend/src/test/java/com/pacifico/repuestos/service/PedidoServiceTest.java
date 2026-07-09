@@ -216,7 +216,7 @@ class PedidoServiceTest {
 
         when(pedidoRepo.findById(1L)).thenReturn(Optional.of(pedido));
 
-        PedidoResponse res = pedidoService.obtener(1L);
+        PedidoResponse res = pedidoService.obtener(1L, "juan@test.com", false);
 
         assertThat(res.getNumeroPedido()).isEqualTo("PED-001");
         assertThat(res.getEstado()).isEqualTo("PENDIENTE");
@@ -227,7 +227,38 @@ class PedidoServiceTest {
     void obtener_noExiste_lanzaExcepcion() {
         when(pedidoRepo.findById(99L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(() -> pedidoService.obtener(99L))
+        assertThatThrownBy(() -> pedidoService.obtener(99L, "juan@test.com", false))
             .isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("Cliente no puede ver el pedido de otro cliente")
+    void obtener_clienteVePedidoAjeno_lanzaExcepcion() {
+        Pedido pedido = Pedido.builder()
+            .id(1L).numeroPedido("PED-001").cliente(clienteMock)
+            .estado("PENDIENTE").subtotal(new BigDecimal("280.00"))
+            .costoDelivery(BigDecimal.ZERO).total(new BigDecimal("280.00"))
+            .tipoDelivery("RECOJO").detalles(List.of()).build();
+
+        when(pedidoRepo.findById(1L)).thenReturn(Optional.of(pedido));
+
+        assertThatThrownBy(() -> pedidoService.obtener(1L, "otro@test.com", false))
+            .isInstanceOf(ResourceNotFoundException.class);
+    }
+
+    @Test
+    @DisplayName("Admin puede ver el pedido de cualquier cliente")
+    void obtener_adminVeCualquierPedido_exitoso() {
+        Pedido pedido = Pedido.builder()
+            .id(1L).numeroPedido("PED-001").cliente(clienteMock)
+            .estado("PENDIENTE").subtotal(new BigDecimal("280.00"))
+            .costoDelivery(BigDecimal.ZERO).total(new BigDecimal("280.00"))
+            .tipoDelivery("RECOJO").detalles(List.of()).build();
+
+        when(pedidoRepo.findById(1L)).thenReturn(Optional.of(pedido));
+
+        PedidoResponse res = pedidoService.obtener(1L, "admin@pacificorepuestos.com", true);
+
+        assertThat(res.getNumeroPedido()).isEqualTo("PED-001");
     }
 }

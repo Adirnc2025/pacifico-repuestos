@@ -2,6 +2,7 @@ package com.pacifico.repuestos.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,12 +39,15 @@ public class Producto {
     private Categoria categoria;
 
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @BatchSize(size = 100)
     private List<ImagenProducto> imagenes;
 
     @OneToOne(mappedBy = "producto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @BatchSize(size = 100)
     private Inventario inventario;
 
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @BatchSize(size = 100)
     private List<Compatibilidad> compatibilidades;
 
     @Column(name = "fecha_creacion")

@@ -57,6 +57,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.DELETE, "/api/marcas/**").hasRole("ADMIN")
                 .requestMatchers("/api/reportes/**").hasRole("ADMIN")
                 .requestMatchers("/api/clientes/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/pedidos").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/pedidos/*/estado").hasRole("ADMIN")
                 // Resto requiere autenticación
                 .anyRequest().authenticated()
             )

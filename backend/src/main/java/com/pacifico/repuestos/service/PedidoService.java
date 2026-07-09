@@ -114,9 +114,18 @@ public class PedidoService {
 
     // ───── DETALLE DE PEDIDO ─────
     @Transactional(readOnly = true)
-    public PedidoResponse obtener(Long id) {
-        return toResponse(pedidoRepo.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Pedido", id)));
+    public PedidoResponse obtener(Long id, String correoSolicitante, boolean esAdmin) {
+        Pedido pedido = pedidoRepo.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Pedido", id));
+
+        // Un CLIENTE solo puede ver sus propios pedidos. Se usa la misma excepción
+        // que "no encontrado" (en vez de un 403) para no revelar a un cliente que
+        // el pedido de otro existe.
+        if (!esAdmin && !pedido.getCliente().getUsuario().getCorreo().equals(correoSolicitante)) {
+            throw new ResourceNotFoundException("Pedido", id);
+        }
+
+        return toResponse(pedido);
     }
 
     // ───── LISTAR TODOS (ADMIN) ─────

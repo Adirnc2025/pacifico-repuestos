@@ -10,11 +10,29 @@ import java.util.List;
 @Repository
 public interface ProductoRepository extends JpaRepository<Producto, Long> {
 
+    @Query("""
+        SELECT p FROM Producto p
+        LEFT JOIN FETCH p.categoria
+        LEFT JOIN FETCH p.inventario
+        WHERE p.activo = true
+    """)
     List<Producto> findByActivoTrue();
 
+    @Query("""
+        SELECT p FROM Producto p
+        LEFT JOIN FETCH p.categoria
+        LEFT JOIN FETCH p.inventario
+        WHERE p.activo = true AND p.destacado = true
+    """)
     List<Producto> findByActivoTrueAndDestacadoTrue();
 
-    List<Producto> findByActivoTrueAndCategoriaId(Long categoriaId);
+    @Query("""
+        SELECT p FROM Producto p
+        LEFT JOIN FETCH p.categoria
+        LEFT JOIN FETCH p.inventario
+        WHERE p.activo = true AND p.categoria.id = :categoriaId
+    """)
+    List<Producto> findByActivoTrueAndCategoriaId(@Param("categoriaId") Long categoriaId);
 
     @Query("""
         SELECT DISTINCT p FROM Producto p
@@ -26,6 +44,8 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
 
     @Query("""
         SELECT p FROM Producto p
+        LEFT JOIN FETCH p.categoria
+        LEFT JOIN FETCH p.inventario
         WHERE p.activo = true AND (
             LOWER(p.nombre) LIKE LOWER(CONCAT('%',:q,'%')) OR
             LOWER(p.codigo) LIKE LOWER(CONCAT('%',:q,'%'))
@@ -35,6 +55,8 @@ public interface ProductoRepository extends JpaRepository<Producto, Long> {
 
     @Query("""
         SELECT DISTINCT p FROM Producto p
+        LEFT JOIN FETCH p.categoria
+        LEFT JOIN FETCH p.inventario
         LEFT JOIN p.compatibilidades c
         LEFT JOIN c.motor m
         LEFT JOIN m.generacion g

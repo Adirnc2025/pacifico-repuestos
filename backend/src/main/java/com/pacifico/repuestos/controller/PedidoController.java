@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,8 +35,16 @@ public class PedidoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PedidoResponse> detalle(@PathVariable Long id) {
-        return ResponseEntity.ok(pedidoService.obtener(id));
+    public ResponseEntity<PedidoResponse> detalle(
+            @PathVariable Long id,
+            @AuthenticationPrincipal String correo) {
+        return ResponseEntity.ok(pedidoService.obtener(id, correo, esAdmin()));
+    }
+
+    private boolean esAdmin() {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth != null && auth.getAuthorities().stream()
+            .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
     }
 
     @GetMapping

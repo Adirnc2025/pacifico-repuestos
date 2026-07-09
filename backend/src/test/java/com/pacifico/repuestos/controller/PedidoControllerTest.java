@@ -69,7 +69,7 @@ class PedidoControllerTest {
 
     @Test
     void detalle_returns200() throws Exception {
-        when(pedidoService.obtener(1L)).thenReturn(mockPedido());
+        when(pedidoService.obtener(eq(1L), any(), anyBoolean())).thenReturn(mockPedido());
 
         mockMvc.perform(get("/api/pedidos/1"))
                 .andExpect(status().isOk())
