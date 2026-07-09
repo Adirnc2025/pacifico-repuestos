@@ -13,6 +13,8 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.*;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -69,8 +71,18 @@ public class SecurityConfig {
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+        // FRONTEND_URL admite uno o varios orígenes separados por coma
+        // (ej. dominio de produccion de Vercel + previews de rama).
+        List<String> origenes = new ArrayList<>(Arrays.stream(frontendUrl.split(","))
+            .map(String::trim)
+            .filter(s -> !s.isEmpty())
+            .toList());
+        if (!origenes.contains("http://localhost:5173")) {
+            origenes.add("http://localhost:5173");
+        }
+
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of(frontendUrl, "http://localhost:5173"));
+        config.setAllowedOrigins(origenes);
         config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
