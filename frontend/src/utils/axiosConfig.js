@@ -2,7 +2,10 @@ import axios from 'axios'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || '/api',
-  headers: { 'Content-Type': 'application/json' }
+  headers: { 'Content-Type': 'application/json' },
+  // Render (plan gratuito) puede tardar hasta ~2 min en despertar el backend
+  // dormido; 60s evita que una petición se quede colgada indefinidamente.
+  timeout: 60000
 })
 
 api.interceptors.request.use(config => {

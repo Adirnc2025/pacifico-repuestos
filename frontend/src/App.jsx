@@ -5,6 +5,7 @@ import Header           from './components/layout/Header'
 import Footer           from './components/layout/Footer'
 import BotonWhatsApp    from './components/common/BotonWhatsApp'
 import ProtectedRoute   from './components/common/ProtectedRoute'
+import ServerWakeGate   from './components/common/ServerWakeGate'
 import Home             from './pages/Home'
 import Productos        from './pages/Productos'
 import ProductoDetalle  from './pages/ProductoDetalle'
@@ -35,54 +36,56 @@ const Placeholder = ({ t }) => (
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <CarritoProvider>
-          <Routes>
-            {/* ── Públicas ── */}
-            <Route path="/"              element={<Layout><Home /></Layout>} />
-            <Route path="/productos"     element={<Layout><Productos /></Layout>} />
-            <Route path="/productos/:id" element={<Layout><ProductoDetalle /></Layout>} />
-            <Route path="/carrito"       element={<Layout><Carrito /></Layout>} />
-            <Route path="/login"         element={<Login />} />
-            <Route path="/registro"      element={<Registro />} />
+    <ServerWakeGate>
+      <BrowserRouter>
+        <AuthProvider>
+          <CarritoProvider>
+            <Routes>
+              {/* ── Públicas ── */}
+              <Route path="/"              element={<Layout><Home /></Layout>} />
+              <Route path="/productos"     element={<Layout><Productos /></Layout>} />
+              <Route path="/productos/:id" element={<Layout><ProductoDetalle /></Layout>} />
+              <Route path="/carrito"       element={<Layout><Carrito /></Layout>} />
+              <Route path="/login"         element={<Login />} />
+              <Route path="/registro"      element={<Registro />} />
 
-            {/* ── Cliente autenticado ── */}
-            <Route path="/checkout" element={
-              <ProtectedRoute><Layout><Checkout /></Layout></ProtectedRoute>
-            }/>
-            <Route path="/pedido-confirmado/:id" element={
-              <ProtectedRoute><Layout><PedidoConfirmado /></Layout></ProtectedRoute>
-            }/>
-            <Route path="/mis-pedidos" element={
-              <ProtectedRoute><Layout><MisPedidos /></Layout></ProtectedRoute>
-            }/>
+              {/* ── Cliente autenticado ── */}
+              <Route path="/checkout" element={
+                <ProtectedRoute><Layout><Checkout /></Layout></ProtectedRoute>
+              }/>
+              <Route path="/pedido-confirmado/:id" element={
+                <ProtectedRoute><Layout><PedidoConfirmado /></Layout></ProtectedRoute>
+              }/>
+              <Route path="/mis-pedidos" element={
+                <ProtectedRoute><Layout><MisPedidos /></Layout></ProtectedRoute>
+              }/>
 
-            {/* ── Admin ── */}
-            <Route path="/admin" element={
-              <ProtectedRoute soloAdmin><AdminLayout /></ProtectedRoute>
-            }>
-              <Route index            element={<Dashboard />} />
-              <Route path="productos" element={<ProductosAdmin />} />
-              <Route path="pedidos"   element={<PedidosAdmin />} />
-              <Route path="catalogo"  element={<CatalogoAdmin />} />
-              <Route path="reportes"  element={<ReportesAdmin />} />
-              <Route path="clientes"  element={<ClientesAdmin />} />
-            </Route>
+              {/* ── Admin ── */}
+              <Route path="/admin" element={
+                <ProtectedRoute soloAdmin><AdminLayout /></ProtectedRoute>
+              }>
+                <Route index            element={<Dashboard />} />
+                <Route path="productos" element={<ProductosAdmin />} />
+                <Route path="pedidos"   element={<PedidosAdmin />} />
+                <Route path="catalogo"  element={<CatalogoAdmin />} />
+                <Route path="reportes"  element={<ReportesAdmin />} />
+                <Route path="clientes"  element={<ClientesAdmin />} />
+              </Route>
 
-            {/* ── 404 ── */}
-            <Route path="*" element={
-              <Layout>
-                <div className="max-w-7xl mx-auto px-4 py-16 text-center">
-                  <h1 className="text-6xl font-bold text-gray-200 mb-4">404</h1>
-                  <p className="text-gray-500">Página no encontrada</p>
-                  <a href="/" className="btn-primary inline-block mt-6">Volver al inicio</a>
-                </div>
-              </Layout>
-            }/>
-          </Routes>
-        </CarritoProvider>
-      </AuthProvider>
-    </BrowserRouter>
+              {/* ── 404 ── */}
+              <Route path="*" element={
+                <Layout>
+                  <div className="max-w-7xl mx-auto px-4 py-16 text-center">
+                    <h1 className="text-6xl font-bold text-gray-200 mb-4">404</h1>
+                    <p className="text-gray-500">Página no encontrada</p>
+                    <a href="/" className="btn-primary inline-block mt-6">Volver al inicio</a>
+                  </div>
+                </Layout>
+              }/>
+            </Routes>
+          </CarritoProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </ServerWakeGate>
   )
 }
