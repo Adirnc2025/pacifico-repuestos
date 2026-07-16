@@ -53,11 +53,12 @@ export default function ProductoCard({ producto }) {
             <PlaceholderIcon />
           )}
         </div>
-        {/* Badge destacado */}
+        {/* Badge destacado (alterna mensaje y color según el id, solo si destacado=true) */}
         {producto.destacado && (
-          <span className="absolute top-2 left-2 bg-secondary text-white
-                           text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wide">
-            Destacado
+          <span className={`absolute top-2 left-2 text-white text-[10px] font-bold
+                            px-2 py-0.5 rounded-full uppercase tracking-wide shadow-sm
+                            ${producto.id % 2 === 0 ? 'bg-red-500' : 'bg-orange-500'}`}>
+            {producto.id % 2 === 0 ? '⭐ Destacado' : '🔥 Más vendido'}
           </span>
         )}
         {/* Badge agotado */}
