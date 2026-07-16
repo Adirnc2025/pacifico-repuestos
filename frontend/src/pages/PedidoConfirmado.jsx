@@ -24,10 +24,14 @@ export default function PedidoConfirmado() {
             <span className="text-gray-600">Total</span>
             <span className="font-bold">S/ {Number(pedido.total).toFixed(2)}</span>
           </div>
-          <div className="flex justify-between text-sm">
+          <div className="flex justify-between text-sm mb-2">
             <span className="text-gray-600">Entrega</span>
             <span>{pedido.tipoDelivery === 'RECOJO'
               ? 'Recojo en tienda' : pedido.direccionEntrega}</span>
+          </div>
+          <div className="flex justify-between text-sm">
+            <span className="text-gray-600">Pago</span>
+            <span>📱 Yape o Plin al número: 981 869 554</span>
           </div>
         </div>
       )}
