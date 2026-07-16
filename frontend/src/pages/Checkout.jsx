@@ -11,7 +11,7 @@ export default function Checkout() {
 
   const [zonas,    setZonas]    = useState([])
   const [form,     setForm]     = useState({
-    tipoDelivery: 'RECOJO', zonaId: '', direccionEntrega: '', observacion: ''
+    tipoDelivery: 'RECOJO', zonaId: '', direccionEntrega: '', telefono: '', observacion: ''
   })
   const [cargando, setCargando] = useState(false)
   const [error,    setError]    = useState('')
@@ -31,15 +31,25 @@ export default function Checkout() {
       setError('Ingresa la dirección de entrega')
       return
     }
+    const telefonoLimpio = form.telefono.replace(/\s/g, '')
+    if (!/^\d{9,15}$/.test(telefonoLimpio)) {
+      setError('Ingresa un teléfono de contacto válido (solo números, entre 9 y 15 dígitos)')
+      return
+    }
     setCargando(true)
     setError('')
     try {
+      // El backend no tiene un campo dedicado para el teléfono del pedido,
+      // así que se antepone a las observaciones para no tocar el backend.
+      const observacionConTelefono = `Tel: ${telefonoLimpio}` +
+        (form.observacion.trim() ? ` - ${form.observacion.trim()}` : '')
+
       const payload = {
         items: items.map(i => ({ productoId: i.id, cantidad: i.cantidad })),
         tipoDelivery:     form.tipoDelivery,
         direccionEntrega: form.direccionEntrega,
         zonaId:           form.zonaId ? parseInt(form.zonaId) : null,
-        observacion:      form.observacion,
+        observacion:      observacionConTelefono,
       }
       const { data } = await pedidoService.crear(payload)
       vaciar()
@@ -123,6 +133,18 @@ export default function Checkout() {
               </div>
             </div>
           )}
+
+          {/* Teléfono de contacto */}
+          <div className="card">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Teléfono de contacto
+            </label>
+            <input type="tel" value={form.telefono}
+              onChange={e => setForm({...form, telefono: e.target.value.replace(/[^\d\s]/g, '')})}
+              placeholder="Ej: 981 869 554"
+              required
+              className="input-field" />
+          </div>
 
           {/* Observaciones */}
           <div className="card">
